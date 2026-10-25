@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>منشئ القرارات الإدارية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">✦</span>
+      <div>
+        <strong>منشئ القرارات الإدارية</strong>
+        <small>قوالب رسمية بتصميم كحلي وذهبي عالي الدقة</small>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn-outline" id="resetBtn" type="button" title="إعادة تعيين كافة الحقول والصور إلى وضعها الافتراضي">إعادة ضبط النموذج</button>
+      <button class="btn btn-outline" id="printBtn" type="button" title="طباعة أو تصدير بصيغة PDF">🖨️ طباعة / PDF</button>
+      <button class="btn btn-outline" id="copyBtn" type="button" title="نسخ الصورة مباشرة للحافظة ولصقها في الواتساب أو البرامج">📋 نسخ الصورة</button>
+      
+      <div class="download-dropdown" id="downloadDropdownContainer">
+        <button class="btn btn-primary" id="downloadBtn" type="button">
+          <span class="btn-icon">⬇</span> تحميل التصميم PNG
+        </button>
+        <button class="btn btn-primary btn-dropdown-toggle" id="downloadMoreBtn" type="button" title="خيارات تحميل إضافية" aria-expanded="false">▾</button>
+        <div class="dropdown-menu" id="downloadMenu">
+          <button type="button" id="downloadPngOpt">
+            <span class="opt-icon">🖼️</span>
+            <div><strong>صورة PNG فائقة الدقة (2508×2508)</strong><small>الخيار المثالي للطباعة والعرض الرسمي</small></div>
+          </button>
+          <button type="button" id="downloadJpgOpt">
+            <span class="opt-icon">📱</span>
+            <div><strong>صورة JPG خفيفة ومضغوطة</strong><small>مثالية للمشاركة السريعة على واتساب ومواقع التواصل</small></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="editor">
+      <div class="editor-heading">
+        <div>
+          <h1>بيانات القرار</h1>
+          <p>أدخل البيانات وستتحدث المعاينة مباشرة مع إمكانية تحريك وضبط الصورة.</p>
+        </div>
+        <span class="step-chip">جاهز للتصدير</span>
+      </div>
+
+      <form id="decisionForm">
+        <!-- 1. البيانات الرسمية -->
+        <details open>
+          <summary><span class="section-icon">▣</span> البيانات الرسمية</summary>
+          <div class="form-grid">
+            <label class="full">عنوان القرار
+              <input name="decisionTitle" value="قرار مجلس إدارة اتحاد شباب الأقصر">
+            </label>
+            <label>رقم القرار
+              <input name="decisionNumber" value="">
+            </label>
+            <label>تاريخ الاجتماع
+              <input name="meetingDate" value="1/9/2026">
+            </label>
+            <label class="full">مقدمة القرار
+              <textarea name="intro" rows="3">بعد الاطلاع على اللائحة الداخلية للاتحاد،
+وعلى ما تقتضيه مصلحة العمل،
+وبناءً على الصلاحيات المخولة لنا،</textarea>
+            </label>
+            <label>عنوان التكليف
+              <input name="assignmentLabel" value="تكليف">
+            </label>
+            <label>تاريخ الإصدار
+              <input name="issueDate" value="2/9/2026">
+            </label>
+          </div>
+        </details>
+
+        <!-- 2. بيانات الشخص والصورة -->
+        <details open>
+          <summary><span class="section-icon">♙</span> بيانات الشخص والصورة الشخصية</summary>
+          <div class="form-grid">
+            <label class="full">الاسم بالكامل
+              <input name="personName" value="م/ محمود جاد">
+            </label>
+            <label class="full">المسمى الوظيفي
+              <input name="jobTitle" value="نائب رئيس الاتحاد لشؤون العلاقات العامة">
+            </label>
+            <label class="full">عبارة توضيحية أسفل الوظيفة
+              <input name="jobSubtitle" value="ويسند له بعض صلاحيات رئيس الاتحاد">
+            </label>
+
+            <!-- كرت رفع الصورة الشخصية المطور -->
+            <div class="image-uploader-card full">
+              <div class="uploader-header">
+                <span class="uploader-title">📷 الصورة الشخصية للمكلف</span>
+                <button type="button" class="btn-subtle" id="resetPortraitBtn" title="استعادة الصورة الافتراضية">استعادة الأصلية</button>
+              </div>
+
+              <div class="dropzone" id="portraitDropzone">
+                <div class="dropzone-preview">
+                  <img id="portraitThumb" src="assets/sample-portrait.jpg" alt="معاينة مصغرة">
+                </div>
+                <div class="dropzone-info">
+                  <label class="upload-btn-label">
+                    <span>اختر صورة من جهازك</span>
+                    <input type="file" id="portraitUpload" accept="image/*" class="sr-only">
+                  </label>
+                  <span class="dropzone-hint">أو اسحب وأفلت الصورة هنا (يدعم JPG، PNG، WebP)</span>
+                </div>
+              </div>
+
+              <!-- أدوات التحكم والضبط الدقيق للصورة -->
+              <div class="image-controls-panel">
+                <div class="control-row">
+                  <label for="portraitZoom">
+                    <span>التكبير (الزووم):</span>
+                    <span id="portraitZoomVal" class="val-badge">100%</span>
+                  </label>
+                  <input type="range" id="portraitZoom" min="50" max="250" value="100" step="1">
+                </div>
+
+                <div class="control-row-grid">
+                  <div class="control-row">
+                    <label for="portraitY">
+                      <span>التحريك رأسيًا:</span>
+                      <span id="portraitYVal" class="val-badge">0px</span>
+                    </label>
+                    <input type="range" id="portraitY" min="-200" max="200" value="0" step="1">
+                  </div>
+                  <div class="control-row">
+                    <label for="portraitX">
+                      <span>التحريك أفقيًا:</span>
+                      <span id="portraitXVal" class="val-badge">0px</span>
+                    </label>
+                    <input type="range" id="portraitX" min="-150" max="150" value="0" step="1">
+                  </div>
+                </div>
+
+                <div class="control-actions">
+                  <button type="button" class="btn-ctrl" id="rotatePortraitBtn" title="تدوير 90 درجة في اتجاه عقارب الساعة">↻ تدوير 90°</button>
+                  <button type="button" class="btn-ctrl" id="centerPortraitBtn" title="إعادة الصورة للمنتصف والوضع الطبيعي">⌖ توسيط وضبط</button>
+                  <div class="interactive-tip">
+                    <span class="tip-icon">✨</span>
+                    <span>يمكنك أيضًا <strong>النقر والسحب بالماوس مباشرة</strong> فوق الصورة في المعاينة لتحريكها!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- 3. السيرة الذاتية والمهام -->
+        <details open>
+          <summary><span class="section-icon">☷</span> السيرة الذاتية والمهام</summary>
+          <div class="form-grid">
+            <label class="full">السيرة الذاتية — كل بند في سطر مستقل
+              <textarea name="cv" rows="6">مدير المكتب الفني شركة وادي النيل للمقاولات فرع الأقصر
+مدير مشروع تطوير محطات السكك الحديد بمحافظة الأقصر وفقًا 2015 - 2016
+مدرب كورسات هندسية بنقابة مهندسي الأقصر
+مدير سابق لمؤسسة قطارات الأقصر الخيرية
+مدير سابق لنشاطات دعم الحياة وتحقيق الأمان
+رئيس مجلس إدارة أكاديمية شير للتدريب</textarea>
+            </label>
+            <label class="full">المهام المكلف بها — كل مهمة في سطر مستقل
+              <textarea name="tasks" rows="5">الإشراف على أعمال العلاقات العامة والتواصل مع الجهات والمؤسسات المختلفة.
+تعزيز علاقات الاتحاد مع الهيئات والأندية والمؤسسات والشخصيات المجتمعية.
+تنظيم ومتابعة الفعاليات واللقاءات والبروتوكولات الخاصة بالاتحاد.
+ممارسة بعض صلاحيات رئيس الاتحاد في حدود ما يفوض أو يكلف به.</textarea>
+            </label>
+          </div>
+        </details>
+
+        <!-- 4. مواد القرار والتوقيع -->
+        <details open>
+          <summary><span class="section-icon">§</span> مواد القرار والتوقيع</summary>
+          <div class="form-grid">
+            <label class="full">نص المادة الثانية
+              <textarea name="article2" rows="2">يعمل بهذا القرار من تاريخ صدوره، وعلى جميع الجهات المعنية تنفيذه كل فيما يخصه.</textarea>
+            </label>
+            <label class="full">نص المادة الثالثة
+              <textarea name="article3" rows="2">على نائب رئيس الاتحاد اتخاذ ما يلزم من إجراءات لتحقيق أهداف الاتحاد الاستراتيجية تمشيًا في نطاق اختصاصه.</textarea>
+            </label>
+            <label class="full">نص المادة الرابعة
+              <textarea name="article4" rows="2">يلغى كل ما يخالف هذا القرار من قرارات سابقة.</textarea>
+            </label>
+            <label>اسم صاحب التوقيع
+              <input name="signerName" value="م/ إسلام الدهين">
+            </label>
+            <label>الصفة الوظيفية
+              <input name="signerTitle" value="رئيس اتحاد شباب الأقصر">
+            </label>
+
+            <!-- كرت رفع التوقيع مع تفريغ الخلفية -->
+            <div class="image-uploader-card full">
+              <div class="uploader-header">
+                <span class="uploader-title">✍️ صورة التوقيع الرسمي</span>
+                <button type="button" class="btn-subtle" id="resetSignatureBtn">استعادة الأصلي</button>
+              </div>
+              <div class="dropzone mini-dropzone" id="signatureDropzone">
+                <div class="dropzone-preview sig-preview">
+                  <img id="signatureThumb" src="assets/sample-signature.jpg" alt="معاينة التوقيع">
+                </div>
+                <div class="dropzone-info">
+                  <label class="upload-btn-label">
+                    <span>رفع صورة التوقيع</span>
+                    <input type="file" id="signatureUpload" accept="image/*" class="sr-only">
+                  </label>
+                  <label class="checkbox-option">
+                    <input type="checkbox" id="transparentSignatureCheck" checked>
+                    <span>إزالة الخلفية البيضاء تلقائيًا (جعل التوقيع شفافًا)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- 5. الشعارات أعلى التصميم -->
+        <details>
+          <summary><span class="section-icon">⚑</span> الشعارات أعلى التصميم</summary>
+          <p class="helper">يمكنك استبدال أي شعار بصورة من جهازك، مع إمكانية إزالة الخلفية البيضاء تلقائيًا.</p>
+          <div class="form-grid">
+            <!-- الشعار 1 -->
+            <div class="logo-upload-item full">
+              <div class="logo-preview-box">
+                <img id="thumbMinistry" src="assets/logo-ministry.jpg" alt="شعار وزارة الشباب والرياضة">
+              </div>
+              <div class="logo-upload-info">
+                <strong>شعار وزارة الشباب والرياضة (اليمين)</strong>
+                <div class="logo-actions">
+                  <label class="upload-btn-label">
+                    <span>تغيير الشعار</span>
+                    <input type="file" id="ministryUpload" accept="image/*" class="sr-only">
+                  </label>
+                  <button type="button" class="btn-subtle" id="resetMinistryBtn">استعادة الأصلي</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- الشعار 2 -->
+            <div class="logo-upload-item full">
+              <div class="logo-preview-box">
+                <img id="thumbUnion" src="assets/logo-union.jpg" alt="شعار اتحاد شباب الأقصر">
+              </div>
+              <div class="logo-upload-info">
+                <strong>شعار اتحاد شباب الأقصر (الوسط)</strong>
+                <div class="logo-actions">
+                  <label class="upload-btn-label">
+                    <span>تغيير الشعار</span>
+                    <input type="file" id="unionUpload" accept="image/*" class="sr-only">
+                  </label>
+                  <button type="button" class="btn-subtle" id="resetUnionBtn">استعادة الأصلي</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- الشعار 3 -->
+            <div class="logo-upload-item full">
+              <div class="logo-preview-box">
+                <img id="thumbFederation" src="assets/logo-federation.jpg" alt="شعار اتحاد الكيانات الشبابية">
+              </div>
+              <div class="logo-upload-info">
+                <strong>شعار اتحاد الكيانات الشبابية (اليسار)</strong>
+                <div class="logo-actions">
+                  <label class="upload-btn-label">
+                    <span>تغيير الشعار</span>
+                    <input type="file" id="federationUpload" accept="image/*" class="sr-only">
+                  </label>
+                  <button type="button" class="btn-subtle" id="resetFederationBtn">استعادة الأصلي</button>
+                </div>
+              </div>
+            </div>
+
+            <label class="checkbox-option full">
+              <input type="checkbox" id="transparentLogosCheck" checked>
+              <span>إزالة الخلفيات البيضاء من الشعارات لتندمج بنعومة مع خلفية الورقة</span>
+            </label>
+          </div>
+        </details>
+
+        <div class="privacy-note">
+          <strong>💾 حفظ تلقائي:</strong> يتم حفظ النصوص وتعديلات موضع وتكبير الصورة تلقائيًا على جهازك، ولن تضيع البيانات عند تحديث الصفحة.
+        </div>
+      </form>
+    </aside>
+
+    <!-- منطقة المعاينة المباشرة -->
+    <section class="preview-area">
+      <div class="preview-toolbar">
+        <div>
+          <h2>المعاينة المباشرة للقرار</h2>
+          <p>التصميم بمقاس 1254×1254 ويتكيف تلقائيًا مع شاشتك.</p>
+        </div>
+        <div class="preview-badges">
+          <span class="live"><i></i> مباشر</span>
+          <span class="zoom-indicator" id="scaleIndicator">100%</span>
+        </div>
+      </div>
+
+      <div class="poster-viewport" id="posterViewport">
+        <article class="poster" id="poster" aria-label="معاينة القرار الإداري">
+          <div class="corner corner-top"></div>
+          <div class="corner corner-bottom"></div>
+          <div class="dot-pattern dots-top"></div>
+          <div class="dot-pattern dots-bottom"></div>
+          <div class="logo-rule rule-one"></div>
+          <div class="logo-rule rule-two"></div>
+
+          <!-- الشعارات -->
+          <img class="logo logo-ministry" id="logoMinistry" src="assets/logo-ministry.jpg" alt="شعار وزارة الشباب والرياضة">
+          <img class="logo logo-union" id="logoUnion" src="assets/logo-union.jpg" alt="شعار اتحاد شباب الأقصر">
+          <img class="logo logo-federation" id="logoFederation" src="assets/logo-federation.jpg" alt="شعار اتحاد الكيانات الشبابية">
+          <div class="union-caption">اتحاد شباب الأقصر</div>
+
+          <div class="ornament ornament-left">✧</div>
+          <div class="ornament ornament-right">✧</div>
+
+          <div class="decision-title" id="outDecisionTitle">قرار مجلس إدارة اتحاد شباب الأقصر</div>
+
+          <div class="meeting-line">
+            <span id="outMeetingLabel">في اجتماعه المنعقد بتاريخ</span>
+            <strong id="outMeetingDate">1/9/2026</strong>
+            <span id="outDecisionNumber" class="decision-number"></span>
+          </div>
+
+          <div class="intro-text" id="outIntro">بعد الاطلاع على اللائحة الداخلية للاتحاد،
+وعلى ما تقتضيه مصلحة العمل،
+وبناءً على الصلاحيات المخولة لنا،</div>
+
+          <div class="assignment-label" id="outAssignmentLabel">تكليف</div>
+
+          <div class="person-name" id="outPersonName">م/ محمود جاد</div>
+          <div class="job-title" id="outJobTitle">نائب رئيس الاتحاد لشؤون العلاقات العامة</div>
+          <div class="job-subtitle" id="outJobSubtitle">ويسند له بعض صلاحيات رئيس الاتحاد</div>
+
+          <!-- لوحة المهام -->
+          <div class="info-panel tasks-panel">
+            <div class="panel-title">
+              <span class="title-icon">◎</span>
+              <span>المهام المكلف بها</span>
+            </div>
+            <ol class="task-list" id="outTasks"></ol>
+          </div>
+
+          <!-- لوحة السيرة الذاتية -->
+          <div class="info-panel cv-panel">
+            <div class="panel-title">
+              <span class="title-icon">♟</span>
+              <span>السيرة الذاتية</span>
+            </div>
+            <ol class="cv-list" id="outCv"></ol>
+          </div>
+
+          <!-- إطار الصورة الشخصية التفاعلي -->
+          <div class="portrait-frame" id="portraitFrame" title="اسحب بالماوس لتحريك الصورة">
+            <div class="portrait-wrapper" id="portraitWrapper">
+              <img id="outPortrait" src="assets/sample-portrait.jpg" alt="الصورة الشخصية" draggable="false">
+            </div>
+            <div class="portrait-drag-badge" id="portraitDragBadge">✦ اسحب لتعديل مكان الوجه</div>
+          </div>
+
+          <!-- مواد القرار -->
+          <div class="article-row article-two">
+            <div class="article-label">المادة الثانية</div>
+            <div class="article-copy" id="outArticle2"></div>
+          </div>
+          <div class="article-row article-three">
+            <div class="article-label">المادة الثالثة</div>
+            <div class="article-copy" id="outArticle3"></div>
+          </div>
+          <div class="article-row article-four">
+            <div class="article-label">المادة الرابعة</div>
+            <div class="article-copy" id="outArticle4"></div>
+          </div>
+
+          <!-- التوقيع والتاريخ -->
+          <div class="signer">
+            <div class="signer-title" id="outSignerTitle">رئيس اتحاد شباب الأقصر</div>
+            <img id="outSignature" src="assets/sample-signature.jpg" alt="التوقيع">
+            <strong id="outSignerName">م/ إسلام الدهين</strong>
+          </div>
+
+          <div class="issue-date">
+            <span class="calendar-icon">▦</span>
+            <span>صدر في: <b id="outIssueDate">2/9/2026</b></span>
+          </div>
+
+          <div class="poster-watermark">قرار إداري</div>
+        </article>
+      </div>
+
+      <div class="preview-footer">
+        <span>أبعاد التصدير: 2508 × 2508 بكسل (مربع فائق الوضوح)</span>
+        <span>الألوان المعتمدة: كحلي داكن وذهبي ملكي</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- رسائل التنبيه العائمة -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- مكتبات التصدير والأصول المدمجة للعمل بدون إنترنت -->
+  <script src="assets/html2canvas.min.js"></script>
+  <script>
+    if (typeof html2canvas === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>');
+    }
+  </script>
+  <script src="assets/default-assets.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
