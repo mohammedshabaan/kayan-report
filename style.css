@@ -922,6 +922,7 @@ input[type=range]::-webkit-slider-thumb:hover {
   white-space: nowrap;
   color: var(--navy);
   letter-spacing: -1px;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
 }
 
 .ornament {
