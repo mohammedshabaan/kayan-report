@@ -801,6 +801,15 @@ input[type=range]::-webkit-slider-thumb:hover {
   direction: rtl;
   font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
   box-shadow: 0 12px 35px rgba(17, 24, 39, 0.15);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensure Arabic cursive ligatures are never broken by letter-spacing */
+.poster,
+.poster * {
+  letter-spacing: normal !important;
 }
 
 .poster::before {
@@ -921,7 +930,7 @@ input[type=range]::-webkit-slider-thumb:hover {
   line-height: 1.4;
   white-space: nowrap;
   color: var(--navy);
-  letter-spacing: -1px;
+  letter-spacing: normal;
   font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
 }
 
