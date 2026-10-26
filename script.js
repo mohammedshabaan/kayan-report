@@ -565,7 +565,9 @@
         logging: false,
         width: 1254,
         height: 1254,
-        windowWidth: 1400
+        windowWidth: 1400,
+        scrollX: 0,
+        scrollY: 0
       });
       return canvas;
     } finally {
@@ -591,17 +593,35 @@
 
     try {
       const canvas = await generatePosterCanvas(2); // 2508x2508
-      const link = document.createElement('a');
+      const isJpg = format === 'jpg' || format === 'jpeg';
+      const mime = isJpg ? 'image/jpeg' : 'image/png';
+      const ext = isJpg ? 'jpg' : 'png';
+      const quality = isJpg ? 0.95 : undefined;
 
-      if (format === 'jpg' || format === 'jpeg') {
-        link.download = getExportFilename('jpg');
-        link.href = canvas.toDataURL('image/jpeg', 0.92);
+      const triggerDownload = (url) => {
+        const link = document.createElement('a');
+        link.download = getExportFilename(ext);
+        link.href = url;
+        link.click();
+      };
+
+      if (canvas.toBlob) {
+        await new Promise((resolve) => {
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              triggerDownload(url);
+              setTimeout(() => URL.revokeObjectURL(url), 2000);
+            } else {
+              triggerDownload(canvas.toDataURL(mime, quality));
+            }
+            resolve();
+          }, mime, quality);
+        });
       } else {
-        link.download = getExportFilename('png');
-        link.href = canvas.toDataURL('image/png');
+        triggerDownload(canvas.toDataURL(mime, quality));
       }
 
-      link.click();
       showToast('تم تحميل صورة القرار بنجاح!');
     } catch (err) {
       console.error(err);
